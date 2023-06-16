@@ -1,22 +1,22 @@
 package counter
 
-// Shift shifts counter values on one position right
-func Shift[T Number](counter []T) {
-	shift(0, counter)
+func initialize[T Number](counter []T) {
+	seg := segmentCount(counter)
+	for i := 0; i < seg; i++ {
+		counter[(i+1)*2-1] = -1
+	}
 }
 
-// ShiftN shifts counter values to N positions right
-func ShiftN[T Number](counter []T, n int) {
-	// TODO make fast shifting
-	if n > 32 {
-		if n >= Capacity(counter) {
-			initCounter(counter)
-			return
-		}
+func segmentCount[T Number](counter []T) int {
+	return len(counter) / 2
+}
+
+func segmentMultiplier(segment int) (m int) {
+	m = 1
+	for i := 0; i < segment; i++ {
+		m *= 2
 	}
-	for i := 0; i < n; i++ {
-		Shift(counter)
-	}
+	return
 }
 
 func shift[T Number](offset int, counter []T) {

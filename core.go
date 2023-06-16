@@ -12,7 +12,7 @@ func Slice[T Number](segments int) []T {
 		return nil
 	}
 	counter := make([]T, segments*2)
-	initCounter(counter)
+	initialize(counter)
 	return counter
 }
 
@@ -28,51 +28,74 @@ func Inc[T Number](counter []T) {
 
 // Sum calculates sum of all values in counter slice
 func Sum[T Number](counter []T) (sum T) {
-	for i := 0; i < len(counter); i++ {
-		if counter[i] < 0 {
-			continue
+	l := len(counter)
+	for i := 0; i < l; i++ {
+		if i%2 == 0 {
+			sum += counter[i]
+		} else if counter[i] > 0 {
+			sum += counter[i]
 		}
-		sum += counter[i]
 	}
 	return
 }
 
-// SumN calculates value of all N values in counter slice
+// SumN calculates value of all N segments in counter slice
 // starting with zero.
-func SumN[T Number](counter []T, index int) (sum T) {
+func SumN[T Number](counter []T, segment int) (sum T) {
 	i := 0
-	for index >= 0 {
-		if i == len(counter) {
+	l := len(counter)
+	for segment >= 0 {
+		if i == l {
 			break
 		}
-		if counter[i] > 0 {
-			sum += counter[i]
-			index--
+		sum += counter[i]
+		if counter[i+1] > 0 && i+1 != l-1 && segment != 0 { // Enabled, not negative, not last
+			sum += counter[i+1]
 		}
-		i++
+		segment--
+		i += 2
 	}
 	return
 }
 
-func segmentCount[T Number](counter []T) int {
-	return len(counter) / 2
-}
-
-func segmentMultiplier(segment int) (m int) {
-	m = 1
-	for i := 0; i < segment; i++ {
-		m *= 2
+// At returns counter value at given segment position
+func At[T Number](counter []T, segment int) (value T) {
+	j := segment * 2
+	if l := len(counter); l > j {
+		value = counter[j]
 	}
 	return
 }
 
-func initCounter[T Number](counter []T) {
-	seg := segmentCount(counter)
-	for i := 0; i < seg; i++ {
-		counter[(i+1)*2-1] = -1
+// IndexOf returns matching segment index as float
+func IndexOf(value int) float64 {
+	return math.Log2(float64(value + 1))
+}
+
+// CeilIndexOf returns matching segment index rounding up
+func CeilIndexOf(value int) int {
+	switch value {
+	case 0:
+		return 0
+	case 1:
+		return 1
+	case 2:
+		return 2
+	case 3:
+		return 2
+	case 4:
+		return 3
+	default:
+		return int(math.Ceil(IndexOf(value)))
 	}
 }
 
+// FloorIndexOf returns matching segment index rounding down
+func FloorIndexOf(value int) int {
+	return int(math.Floor(IndexOf(value)))
+}
+
+// Capacity returns maximum capacity of counter slice
 func Capacity[T Number](counter []T) (cap int) {
 	for i := 0; i < segmentCount(counter); i++ {
 		cap += segmentMultiplier(i)
@@ -80,6 +103,26 @@ func Capacity[T Number](counter []T) (cap int) {
 	return
 }
 
+// Shift shifts counter values on one position right
+func Shift[T Number](counter []T) {
+	shift(0, counter)
+}
+
+// ShiftN shifts counter values to N positions right
+func ShiftN[T Number](counter []T, n int) {
+	// TODO make fast shifting
+	if n > 32 {
+		if n >= Capacity(counter) {
+			initialize(counter)
+			return
+		}
+	}
+	for i := 0; i < n; i++ {
+		Shift(counter)
+	}
+}
+
+// Print outputs counter slice contents to standard output
 func Print[T Number](counter []T) {
 	segments := segmentCount(counter)
 	fmt.Printf("Counter with %d segments, capacity %d\n", segments, Capacity(counter))

@@ -71,3 +71,11 @@ func BenchmarkShiftNOverflow(b *testing.B) {
 		ShiftN(c, 1024)
 	}
 }
+
+func BenchmarkCeilIndexOf(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		for j := 0; j < 5; j++ {
+			CeilIndexOf(j)
+		}
+	}
+}
