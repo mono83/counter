@@ -1,4 +1,4 @@
-package counter
+package slice
 
 // Number defines data counter works with
 type Number interface {

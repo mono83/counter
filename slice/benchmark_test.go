@@ -1,9 +1,9 @@
-package counter
+package slice
 
 import "testing"
 
 func BenchmarkSum15(b *testing.B) {
-	c := Slice[int](15)
+	c := New[int](15)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		Sum(c)
@@ -11,7 +11,7 @@ func BenchmarkSum15(b *testing.B) {
 }
 
 func BenchmarkShift(b *testing.B) {
-	c := Slice[int](15)
+	c := New[int](15)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		Shift(c)
@@ -19,7 +19,7 @@ func BenchmarkShift(b *testing.B) {
 }
 
 func BenchmarkShift1000(b *testing.B) {
-	c := Slice[int](15)
+	c := New[int](15)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		for j := 0; j < 1000; j++ {
@@ -29,7 +29,7 @@ func BenchmarkShift1000(b *testing.B) {
 }
 
 func BenchmarkShift1000000(b *testing.B) {
-	c := Slice[int](15)
+	c := New[int](15)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		for j := 0; j < 1000000; j++ {
@@ -39,7 +39,7 @@ func BenchmarkShift1000000(b *testing.B) {
 }
 
 func BenchmarkShiftN1000(b *testing.B) {
-	c := Slice[int](15)
+	c := New[int](15)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		ShiftN(c, 1000)
@@ -47,28 +47,26 @@ func BenchmarkShiftN1000(b *testing.B) {
 }
 
 func BenchmarkShiftN1000000(b *testing.B) {
-	c := Slice[int](15)
+	c := New[int](15)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		ShiftN(c, 1000000)
 	}
 }
 
-func BenchmarkShiftOverflow(b *testing.B) {
-	c := Slice[int](10)
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		for j := 0; j < 1024; j++ {
-			Shift(c)
-		}
-	}
-}
-
 func BenchmarkShiftNOverflow(b *testing.B) {
-	c := Slice[int](10)
+	c := New[int](10)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		ShiftN(c, 1024)
+	}
+}
+
+func BenchmarkShiftNFOverflow(b *testing.B) {
+	c := New[int](10)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		ShiftNF(c, 1024)
 	}
 }
 

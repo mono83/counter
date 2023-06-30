@@ -2,16 +2,18 @@ package counter
 
 import (
 	"time"
+
+	"github.com/mono83/counter/slice"
 )
 
-func NewDurationCounter[T Number](slot time.Duration, segments int) *DurationCounter[T] {
+func NewDurationCounter[T slice.Number](slot time.Duration, segments int) *DurationCounter[T] {
 	return &DurationCounter[T]{
 		counter: NewCounter[T](segments),
 		slot:    slot,
 	}
 }
 
-type DurationCounter[T Number] struct {
+type DurationCounter[T slice.Number] struct {
 	counter *Counter[T]
 	slot    time.Duration
 	last    time.Time
@@ -46,7 +48,7 @@ func (d *DurationCounter[T]) Sum() T {
 func (d *DurationCounter[T]) CeilSumD(delta time.Duration) T {
 	segment := 0
 	if delta > d.slot {
-		segment = CeilIndexOf(int(delta / d.slot))
+		segment = slice.CeilIndexOf(int(delta / d.slot))
 	}
 	return d.counter.SumN(segment)
 }
@@ -54,7 +56,7 @@ func (d *DurationCounter[T]) CeilSumD(delta time.Duration) T {
 func (d *DurationCounter[T]) FloorSumD(delta time.Duration) T {
 	segment := 0
 	if delta > d.slot {
-		segment = FloorIndexOf(int(delta / d.slot))
+		segment = slice.FloorIndexOf(int(delta / d.slot))
 	}
 	return d.counter.SumN(segment)
 }

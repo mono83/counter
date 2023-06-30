@@ -1,26 +1,27 @@
-package counter
+package slice
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestNew(t *testing.T) {
-	assert.Nil(t, Slice[int](0))
-	assert.Nil(t, Slice[int](-1))
-	if c := Slice[int](1); assert.NotNil(t, c) {
+	assert.Nil(t, New[int](0))
+	assert.Nil(t, New[int](-1))
+	if c := New[int](1); assert.NotNil(t, c) {
 		assert.Equal(t, []int{0, -1}, c)
 	}
-	if c := Slice[int](5); assert.NotNil(t, c) {
+	if c := New[int](5); assert.NotNil(t, c) {
 		assert.Equal(t, []int{0, -1, 0, -1, 0, -1, 0, -1, 0, -1}, c)
 	}
-	if c := Slice[int](5); assert.NotNil(t, c) {
+	if c := New[int](5); assert.NotNil(t, c) {
 		assert.Equal(t, []int{0, -1, 0, -1, 0, -1, 0, -1, 0, -1}, c)
 	}
 }
 
 func TestAddInc(t *testing.T) {
-	c := Slice[int](1)
+	c := New[int](1)
 	Add(c, 5)
 	assert.Equal(t, 5, c[0])
 	Add(c, 8)
@@ -101,12 +102,12 @@ func TestShift(t *testing.T) {
 }
 
 func TestShiftN(t *testing.T) {
-	c1 := Slice[int](15)
+	c1 := New[int](15)
 
 	Inc(c1)
 	for i := 0; i < 512; i++ {
 		Shift(c1)
-		c2 := Slice[int](15)
+		c2 := New[int](15)
 		Inc(c2)
 		ShiftN(c2, i+1)
 		assert.Equal(t, c1, c2)
@@ -143,19 +144,19 @@ func TestIndexOf(t *testing.T) {
 }
 
 func TestCapacity(t *testing.T) {
-	assert.Equal(t, 1, Capacity(Slice[int](1)))      // 1
-	assert.Equal(t, 3, Capacity(Slice[int](2)))      // 1 2
-	assert.Equal(t, 7, Capacity(Slice[int](3)))      // 1 2 4
-	assert.Equal(t, 15, Capacity(Slice[int](4)))     // 1 2 4 8
-	assert.Equal(t, 31, Capacity(Slice[int](5)))     // 1 2 4 8 16
-	assert.Equal(t, 63, Capacity(Slice[int](6)))     // 1 2 4 8 16 32
-	assert.Equal(t, 127, Capacity(Slice[int](7)))    // 1 2 4 8 16 32 64
-	assert.Equal(t, 255, Capacity(Slice[int](8)))    // 1 2 4 8 16 32 64 128
-	assert.Equal(t, 511, Capacity(Slice[int](9)))    // 1 2 4 8 16 32 64 128 256
-	assert.Equal(t, 1023, Capacity(Slice[int](10)))  // 1 2 4 8 16 32 64 128 256 512
-	assert.Equal(t, 2047, Capacity(Slice[int](11)))  // 1 2 4 8 16 32 64 128 256 512 1024
-	assert.Equal(t, 4095, Capacity(Slice[int](12)))  // 1 2 4 8 16 32 64 128 256 512 1024 2048
-	assert.Equal(t, 8191, Capacity(Slice[int](13)))  // 1 2 4 8 16 32 64 128 256 512 1024 2048 4096
-	assert.Equal(t, 16383, Capacity(Slice[int](14))) // 1 2 4 8 16 32 64 128 256 512 1024 2048 4096 8192
-	assert.Equal(t, 32767, Capacity(Slice[int](15))) // 1 2 4 8 16 32 64 128 256 512 1024 2048 4096 8192 16384
+	assert.Equal(t, 1, Capacity(New[int](1)))      // 1
+	assert.Equal(t, 3, Capacity(New[int](2)))      // 1 2
+	assert.Equal(t, 7, Capacity(New[int](3)))      // 1 2 4
+	assert.Equal(t, 15, Capacity(New[int](4)))     // 1 2 4 8
+	assert.Equal(t, 31, Capacity(New[int](5)))     // 1 2 4 8 16
+	assert.Equal(t, 63, Capacity(New[int](6)))     // 1 2 4 8 16 32
+	assert.Equal(t, 127, Capacity(New[int](7)))    // 1 2 4 8 16 32 64
+	assert.Equal(t, 255, Capacity(New[int](8)))    // 1 2 4 8 16 32 64 128
+	assert.Equal(t, 511, Capacity(New[int](9)))    // 1 2 4 8 16 32 64 128 256
+	assert.Equal(t, 1023, Capacity(New[int](10)))  // 1 2 4 8 16 32 64 128 256 512
+	assert.Equal(t, 2047, Capacity(New[int](11)))  // 1 2 4 8 16 32 64 128 256 512 1024
+	assert.Equal(t, 4095, Capacity(New[int](12)))  // 1 2 4 8 16 32 64 128 256 512 1024 2048
+	assert.Equal(t, 8191, Capacity(New[int](13)))  // 1 2 4 8 16 32 64 128 256 512 1024 2048 4096
+	assert.Equal(t, 16383, Capacity(New[int](14))) // 1 2 4 8 16 32 64 128 256 512 1024 2048 4096 8192
+	assert.Equal(t, 32767, Capacity(New[int](15))) // 1 2 4 8 16 32 64 128 256 512 1024 2048 4096 8192 16384
 }

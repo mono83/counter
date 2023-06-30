@@ -1,4 +1,4 @@
-package counter
+package slice
 
 func initialize[T Number](counter []T) {
 	seg := segmentCount(counter)

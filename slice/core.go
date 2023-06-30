@@ -1,13 +1,13 @@
-package counter
+package slice
 
 import (
 	"fmt"
 	"math"
 )
 
-// Slice creates new counter slice with given amount of slots
+// New creates new counter slice with given amount of slots
 // Each slot contains two data cells and one staging cell
-func Slice[T Number](segments int) []T {
+func New[T Number](segments int) []T {
 	if segments < 1 {
 		return nil
 	}
@@ -110,6 +110,14 @@ func Shift[T Number](counter []T) {
 
 // ShiftN shifts counter values to N positions right
 func ShiftN[T Number](counter []T, n int) {
+	for i := 0; i < n; i++ {
+		Shift(counter)
+	}
+}
+
+// ShiftNF shifts counter values to N positions right
+// May use optimization causing inaccurate values
+func ShiftNF[T Number](counter []T, n int) {
 	// TODO make fast shifting
 	if n > 32 {
 		if n >= Capacity(counter) {

@@ -1,4 +1,4 @@
-package counter
+package slice
 
 import (
 	"testing"
@@ -7,7 +7,7 @@ import (
 )
 
 func Test16s(t *testing.T) {
-	c := Slice[int](4)
+	c := New[int](4)
 
 	Add(c, 1)
 	assert.Equal(t, 1, Sum(c))
